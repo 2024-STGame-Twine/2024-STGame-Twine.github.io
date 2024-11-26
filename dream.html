@@ -17,10 +17,13 @@
       white-space: pre-line; /* 줄바꿈과 연속된 공백 처리 */
   }
 
-  #choice {
-      color: #2ecc71; /* 선택지 색상 */
-      font-size: 25px; /* 선택지 크기 */
-      font-weight: bold; /* 선택지 글씨 두께 */
+  .image {
+      display: inline-block;
+      width: 300px; /* 이미지 기본 너비 */
+      height: 300px; /* 이미지 기본 높이 */
+      object-fit: contain; /* 비율 유지 */
+      margin: 10px auto; /* 중앙 정렬 */
+      border-radius: 10px; /* 모서리 둥글게 */
   }
 
   /* 물결 애니메이션 */
@@ -35,7 +38,7 @@
 
   .wave {
       display: inline-block;
-      animation: wave 1s ease-in-out infinite;
+      animation: wave 1s ease-in-out infinite; /* 물결 애니메이션 반복 */
   }
 
   /* 떨림 애니메이션 */
@@ -56,73 +59,73 @@
 
   .shake {
       display: inline-block;
-      animation: shake 0.3s ease-in-out infinite; /* 떨림 속도 */
+      animation: shake 0.3s ease-in-out infinite; /* 떨림 애니메이션 반복 */
   }
 
-  /* 띄어쓰기 스타일 */
-  .wave.space, .shake.space {
-      width: 10px; /* 띄어쓰기 공간 크기 */
-      display: inline-block; /* 공간을 차지하도록 설정 */
-  }
-
-  /* 이미지 스타일 */
-  .image {
+  /* 물결과 떨림 효과를 함께 적용 */
+  .wave-shake {
       display: inline-block;
-      max-width: 50px;
-      max-height: 50px;
+      animation: wave 1s ease-in-out infinite, shake 0.3s ease-in-out infinite;
   }
 &lt;/style&gt;
 
 &lt;script&gt;
-  // 타이핑 함수: 한 줄씩 스타일 적용
-  function typeWriter(text, containerId, speed, fontSize = &quot;25px&quot;, color = &quot;#fff&quot;, waveEffect = false, shakeEffect = false) {
+  // 타이핑 효과 함수
+  function typeWriter(
+      text,
+      containerId,
+      speed,
+      fontSize = &quot;25px&quot;,
+      color = &quot;#fff&quot;,
+      waveEffect = false,
+      shakeEffect = false
+  ) {
       return new Promise((resolve) =&gt; {
           const container = document.getElementById(containerId);
 
-          // 새로운 줄을 위한 div 생성
           const line = document.createElement(&quot;div&quot;);
           line.className = &quot;line&quot;;
           line.style.fontSize = fontSize;
           line.style.color = color;
           container.appendChild(line);
 
-          // 글자 타이핑 효과
           let i = 0;
           const interval = setInterval(() =&gt; {
               if (i &lt; text.length) {
                   const char = text.charAt(i);
-                  const span = document.createElement(&quot;span&quot;);
 
-                  // 이미지 삽입 처리
-                  if (char === &#39;[&#39;) {
-                      // 이미지 구분자가 시작되면
-                      const endIndex = text.indexOf(&#39;]&#39;, i);
+                  // 이미지 삽입 형식: [이미지URL]
+                  if (char === &quot;[&quot;) {
+                      const endIndex = text.indexOf(&quot;]&quot;, i);
                       if (endIndex &gt; i) {
-                          const imageUrl = text.substring(i + 1, endIndex); // 이미지 URL 추출
+                          const imageUrl = text.substring(i + 1, endIndex);
+
+                          // 이미지 생성 및 삽입
                           const img = document.createElement(&quot;img&quot;);
                           img.src = imageUrl;
                           img.className = &quot;image&quot;;
-                          line.appendChild(img);
-                          i = endIndex + 1; // 이미지 처리 후 인덱스 이동, `]`는 제외
-                          return;
+                          container.appendChild(img);
+
+                          i = endIndex + 1;
+                          return; // 다음 타이핑으로 넘어감
                       }
                   }
 
-                  // 띄어쓰기 처리
+                  // 텍스트 출력
+                  const span = document.createElement(&quot;span&quot;);
+                  span.textContent = char;
+
+                  // 애니메이션 효과 적용
                   if (char === &quot; &quot;) {
-                      span.className = waveEffect ? &quot;wave space&quot; : shakeEffect ? &quot;shake space&quot; : &quot;space&quot;;
-                      span.innerHTML = &quot;&amp;nbsp;&quot;; // 띄어쓰기 표시
+                      span.className = &quot;space&quot;;
+                      span.innerHTML = &quot;&amp;nbsp;&quot;;
                   } else {
-                      span.textContent = char;
-
-                      // 물결 효과를 적용할 경우 클래스 추가
-                      if (waveEffect) {
-                          span.className = &quot;wave&quot;;
-                      }
-
-                      // 떨림 효과를 적용할 경우 클래스 추가
-                      if (shakeEffect) {
-                          span.className = &quot;shake&quot;;
+                      if (waveEffect &amp;&amp; shakeEffect) {
+                          span.className = &quot;wave-shake&quot;; // 두 효과를 동시에 적용
+                      } else if (waveEffect) {
+                          span.className = &quot;wave&quot;; // 물결 효과만 적용
+                      } else if (shakeEffect) {
+                          span.className = &quot;shake&quot;; // 떨림 효과만 적용
                       }
                   }
 
@@ -153,6 +156,14 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
       await typeWriter(&quot;.\n\n&quot;, containerId, 200, &quot;25px&quot;, &quot;#fff&quot;);
       
       await typeWriter(&quot;신인상 트로피가 코 앞이다.\n\n&quot;, containerId, 50, &quot;30px&quot;, &quot;#2ecc71&quot;);
+      
+      await typeWriter(
+          &quot;[https://github.com/user-attachments/assets/f7598e46-6061-43d4-82ed-fafe95b864b6]&quot;,
+          containerId,
+          100,
+          &quot;25px&quot;,
+          &quot;#C70039&quot;
+      );
 
       // 대사가 모두 출력된 후 선택지를 표시
       document.getElementById(&quot;choice&quot;).style.display = &quot;block&quot;;
@@ -167,10 +178,13 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
       white-space: pre-line; /* 줄바꿈과 연속된 공백 처리 */
   }
 
-  #choice {
-      color: #2ecc71; /* 선택지 색상 */
-      font-size: 25px; /* 선택지 크기 */
-      font-weight: bold; /* 선택지 글씨 두께 */
+  .image {
+      display: inline-block;
+      width: 300px; /* 이미지 기본 너비 */
+      height: 300px; /* 이미지 기본 높이 */
+      object-fit: contain; /* 비율 유지 */
+      margin: 10px auto; /* 중앙 정렬 */
+      border-radius: 10px; /* 모서리 둥글게 */
   }
 
   /* 물결 애니메이션 */
@@ -185,7 +199,7 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
 
   .wave {
       display: inline-block;
-      animation: wave 1s ease-in-out infinite;
+      animation: wave 1s ease-in-out infinite; /* 물결 애니메이션 반복 */
   }
 
   /* 떨림 애니메이션 */
@@ -206,73 +220,73 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
 
   .shake {
       display: inline-block;
-      animation: shake 0.3s ease-in-out infinite; /* 떨림 속도 */
+      animation: shake 0.3s ease-in-out infinite; /* 떨림 애니메이션 반복 */
   }
 
-  /* 띄어쓰기 스타일 */
-  .wave.space, .shake.space {
-      width: 10px; /* 띄어쓰기 공간 크기 */
-      display: inline-block; /* 공간을 차지하도록 설정 */
-  }
-
-  /* 이미지 스타일 */
-  .image {
+  /* 물결과 떨림 효과를 함께 적용 */
+  .wave-shake {
       display: inline-block;
-      max-width: 50px;
-      max-height: 50px;
+      animation: wave 1s ease-in-out infinite, shake 0.3s ease-in-out infinite;
   }
 &lt;/style&gt;
 
 &lt;script&gt;
-  // 타이핑 함수: 한 줄씩 스타일 적용
-  function typeWriter(text, containerId, speed, fontSize = &quot;25px&quot;, color = &quot;#fff&quot;, waveEffect = false, shakeEffect = false) {
+  // 타이핑 효과 함수
+  function typeWriter(
+      text,
+      containerId,
+      speed,
+      fontSize = &quot;25px&quot;,
+      color = &quot;#fff&quot;,
+      waveEffect = false,
+      shakeEffect = false
+  ) {
       return new Promise((resolve) =&gt; {
           const container = document.getElementById(containerId);
 
-          // 새로운 줄을 위한 div 생성
           const line = document.createElement(&quot;div&quot;);
           line.className = &quot;line&quot;;
           line.style.fontSize = fontSize;
           line.style.color = color;
           container.appendChild(line);
 
-          // 글자 타이핑 효과
           let i = 0;
           const interval = setInterval(() =&gt; {
               if (i &lt; text.length) {
                   const char = text.charAt(i);
-                  const span = document.createElement(&quot;span&quot;);
 
-                  // 이미지 삽입 처리
-                  if (char === &#39;[&#39;) {
-                      // 이미지 구분자가 시작되면
-                      const endIndex = text.indexOf(&#39;]&#39;, i);
+                  // 이미지 삽입 형식: [이미지URL]
+                  if (char === &quot;[&quot;) {
+                      const endIndex = text.indexOf(&quot;]&quot;, i);
                       if (endIndex &gt; i) {
-                          const imageUrl = text.substring(i + 1, endIndex); // 이미지 URL 추출
+                          const imageUrl = text.substring(i + 1, endIndex);
+
+                          // 이미지 생성 및 삽입
                           const img = document.createElement(&quot;img&quot;);
                           img.src = imageUrl;
                           img.className = &quot;image&quot;;
-                          line.appendChild(img);
-                          i = endIndex + 1; // 이미지 처리 후 인덱스 이동, `]`는 제외
-                          return;
+                          container.appendChild(img);
+
+                          i = endIndex + 1;
+                          return; // 다음 타이핑으로 넘어감
                       }
                   }
 
-                  // 띄어쓰기 처리
+                  // 텍스트 출력
+                  const span = document.createElement(&quot;span&quot;);
+                  span.textContent = char;
+
+                  // 애니메이션 효과 적용
                   if (char === &quot; &quot;) {
-                      span.className = waveEffect ? &quot;wave space&quot; : shakeEffect ? &quot;shake space&quot; : &quot;space&quot;;
-                      span.innerHTML = &quot;&amp;nbsp;&quot;; // 띄어쓰기 표시
+                      span.className = &quot;space&quot;;
+                      span.innerHTML = &quot;&amp;nbsp;&quot;;
                   } else {
-                      span.textContent = char;
-
-                      // 물결 효과를 적용할 경우 클래스 추가
-                      if (waveEffect) {
-                          span.className = &quot;wave&quot;;
-                      }
-
-                      // 떨림 효과를 적용할 경우 클래스 추가
-                      if (shakeEffect) {
-                          span.className = &quot;shake&quot;;
+                      if (waveEffect &amp;&amp; shakeEffect) {
+                          span.className = &quot;wave-shake&quot;; // 두 효과를 동시에 적용
+                      } else if (waveEffect) {
+                          span.className = &quot;wave&quot;; // 물결 효과만 적용
+                      } else if (shakeEffect) {
+                          span.className = &quot;shake&quot;; // 떨림 효과만 적용
                       }
                   }
 
@@ -286,6 +300,7 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
       });
   }
 
+
   // 여러 텍스트를 순차적으로 출력
   async function runTypingEffect() {
       const containerId = &quot;typewriter-container&quot;;
@@ -293,9 +308,7 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
       await typeWriter(
           &quot;쥐려던 찰나 시야가 울렁거리더니 폭죽을 터뜨리던 무대장치 앞으로 점점 시야가 가까워진다.\n\n&quot;,
           containerId,
-          50,
-          &quot;25px&quot;,
-          &quot;#ffffff&quot;
+          50
       );
 
       await typeWriter(
@@ -307,15 +320,15 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
           false,
           true
       );
-
+      
       await typeWriter(
-          &quot;\n시야가 붉든다...\n\n&quot;,
+          &quot;\n시야가 붉게 물든다...\n\n[https://github.com/user-attachments/assets/3d9a77f1-7a4a-4b56-8653-16f4bd2d6cc1]&quot;,
           containerId,
           100,
           &quot;25px&quot;,
           &quot;#C70039&quot;
       );
-      
+
       await typeWriter(
           &quot;비명소리가 들린다.\n\n&quot;,
           containerId,
@@ -325,10 +338,8 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
       );
   }
 
-  // 타이핑 효과 실행
   runTypingEffect();
-&lt;/script&gt;
-</tw-passagedata></tw-storydata>
+&lt;/script&gt;</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
