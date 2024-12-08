@@ -9,8 +9,8 @@
 </head>
 <body>
 <tw-story><noscript><tw-noscript>JavaScript needs to be enabled to play stair.</tw-noscript></noscript></tw-story>
-<tw-storydata name="stair" startnode="1" creator="Twine" creator-version="2.9.2" format="Harlowe" format-version="3.3.9" ifid="000B55AF-0543-4C3D-A339-CE4F5AD7058C" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="제목 없는 구절" tags="" position="700,325" size="100,100">&lt;div id=&quot;typewriter-container&quot;&gt;&lt;/div&gt;
-&lt;div id=&quot;choice&quot; style=&quot;display: none; margin-top: 20px;&quot;&gt;[[계속 한다. -&gt;부모님]]&lt;/div&gt;
+<tw-storydata name="stair" startnode="1" creator="Twine" creator-version="2.9.2" format="Harlowe" format-version="3.3.9" ifid="000B55AF-0543-4C3D-A339-CE4F5AD7058C" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="제목 없는 구절" tags="" position="700,325" size="100,100">&lt;div id=&quot;typewriter-containers&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;choice&quot; style=&quot;display: none; margin-top: 20px;&quot;&gt;[[계속한다. -&gt;부모님]]&lt;/div&gt;
 
 &lt;style&gt;
   .line {
@@ -70,79 +70,93 @@
 &lt;/style&gt;
 
 &lt;script&gt;
-  // 타이핑 효과 함수
-  function typeWriter(
-      text,
-      containerId,
-      speed,
-      fontSize = &quot;25px&quot;,
-      color = &quot;#fff&quot;,
-      waveEffect = false,
-      shakeEffect = false
-  ) {
-      return new Promise((resolve) =&gt; {
-          const container = document.getElementById(containerId);
-
-          const line = document.createElement(&quot;div&quot;);
-          line.className = &quot;line&quot;;
-          line.style.fontSize = fontSize;
-          line.style.color = color;
-          container.appendChild(line);
-
-          let i = 0;
-          const interval = setInterval(() =&gt; {
-              if (i &lt; text.length) {
-                  const char = text.charAt(i);
-
-                  // 이미지 삽입 형식: [이미지URL]
-                  if (char === &quot;[&quot;) {
-                      const endIndex = text.indexOf(&quot;]&quot;, i);
-                      if (endIndex &gt; i) {
-                          const imageUrl = text.substring(i + 1, endIndex);
-
-                          // 이미지 생성 및 삽입
-                          const img = document.createElement(&quot;img&quot;);
-                          img.src = imageUrl;
-                          img.className = &quot;image&quot;;
-                          container.appendChild(img);
-
-                          i = endIndex + 1;
-                          return; // 다음 타이핑으로 넘어감
-                      }
-                  }
-
-                  // 텍스트 출력
-                  const span = document.createElement(&quot;span&quot;);
-                  span.textContent = char;
-
-                  // 애니메이션 효과 적용
-                  if (char === &quot; &quot;) {
-                      span.className = &quot;space&quot;;
-                      span.innerHTML = &quot;&amp;nbsp;&quot;;
-                  } else {
-                      if (waveEffect &amp;&amp; shakeEffect) {
-                          span.className = &quot;wave-shake&quot;; // 두 효과를 동시에 적용
-                      } else if (waveEffect) {
-                          span.className = &quot;wave&quot;; // 물결 효과만 적용
-                      } else if (shakeEffect) {
-                          span.className = &quot;shake&quot;; // 떨림 효과만 적용
-                      }
-                  }
-
-                  line.appendChild(span);
-                  i++;
-              } else {
-                  clearInterval(interval); // 타이핑 완료
-                  resolve(); // 작업 완료 신호
-              }
-          }, speed);
-      });
+  function generateRandomId(prefix = &quot;typewriter-container&quot;) {
+      return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
   }
+
+  function typeWriter(
+    text,
+    containerId,
+    speed,
+    fontSize = &quot;25px&quot;,
+    color = &quot;#fff&quot;,
+    waveEffect = false,
+    shakeEffect = false
+  ) {
+    return new Promise((resolve) =&gt; {
+        const container = document.getElementById(containerId);
+
+        const line = document.createElement(&quot;div&quot;);
+        line.className = &quot;line&quot;;
+        line.style.fontSize = fontSize;
+        line.style.color = color;
+        container.appendChild(line);
+
+        let i = 0;
+        const interval = setInterval(() =&gt; {
+            if (i &lt; text.length) {
+                const char = text.charAt(i);
+
+                const span = document.createElement(&quot;span&quot;);
+
+                // 이미지 삽입 처리: [이미지URL]
+                if (char === &quot;[&quot;) {
+                    const endIndex = text.indexOf(&quot;]&quot;, i);
+                    if (endIndex &gt; i) {
+                        const imageUrl = text.substring(i + 1, endIndex);
+
+                        // 이미지 생성 및 삽입
+                        const img = document.createElement(&quot;img&quot;);
+                        img.src = imageUrl;
+                        img.className = &quot;image&quot;;
+                        line.appendChild(img);
+
+                        i = endIndex + 1;
+                        return; // 이미지가 삽입되면 다음 타이핑으로 넘어감
+                    }
+                }
+
+                // 공백 처리
+                if (char === &quot; &quot;) {
+                    span.innerHTML = &quot;&amp;nbsp;&quot;;
+                } else {
+                    // 일반 문자 처리
+                    span.textContent = char;
+                }
+
+                // 애니메이션 효과 적용
+                if (waveEffect &amp;&amp; shakeEffect) {
+                    span.classList.add(&quot;wave-shake&quot;);
+                } else if (waveEffect) {
+                    span.classList.add(&quot;wave&quot;);
+                } else if (shakeEffect) {
+                    span.classList.add(&quot;shake&quot;);
+                }
+
+                line.appendChild(span);
+                i++;
+            } else {
+                clearInterval(interval); // 타이핑 완료
+                resolve(); // 작업 완료 신호
+            }
+        }, speed);
+    });
+}
 
   // 여러 텍스트를 순차적으로 출력
   async function runTypingEffect() {
-      const containerId = &quot;typewriter-container&quot;;
+      const containerParentId = &quot;typewriter-containers&quot;;
+      const containerId = generateRandomId(); // 고유 ID 생성
       
+      // 새 컨테이너를 추가
+      const containerParent = document.getElementById(containerParentId);
+      const newContainer = document.createElement(&quot;div&quot;);
+
+      // 생성된 컨테이너에 ID와 필요한 스타일 추가
+      newContainer.id = containerId;
+      newContainer.classList.add(&quot;line&quot;); // 스타일 유지
+      containerParent.appendChild(newContainer);
+
       await typeWriter(&quot;친구들과 축구공을 즐겁게 차고, 집에 와서는 부모님을 위해 쿠키를 굽고, 넌 어떻게 그렇게 게임을 못하냐며 친구들에게 잔소리를 들어도 끊임없이 도전하는 어린 나.&quot;, containerId, 50);
      
             await typeWriter(&quot;[https://github.com/user-attachments/assets/d65af0fd-9688-451b-afc2-816ca7819fca]&quot;, containerId, 50);
@@ -195,7 +209,8 @@
   // 타이핑 효과 실행
   runTypingEffect();
 &lt;/script&gt;
-</tw-passagedata><tw-passagedata pid="2" name="부모님" tags="" position="700,450" size="100,100">&lt;div id=&quot;typewriter-container&quot;&gt;&lt;/div&gt;
+</tw-passagedata><tw-passagedata pid="2" name="부모님" tags="" position="700,450" size="100,100">&lt;div id=&quot;typewriter-containers&quot;&gt;&lt;/div&gt;
+
 &lt;style&gt;
   .line {
       white-space: pre-line; /* 줄바꿈과 연속된 공백 처리 */
@@ -254,78 +269,76 @@
 &lt;/style&gt;
 
 &lt;script&gt;
-  // 타이핑 효과 함수
-  function typeWriter(
-      text,
-      containerId,
-      speed,
-      fontSize = &quot;25px&quot;,
-      color = &quot;#fff&quot;,
-      waveEffect = false,
-      shakeEffect = false
-  ) {
-      return new Promise((resolve) =&gt; {
-          const container = document.getElementById(containerId);
-
-          const line = document.createElement(&quot;div&quot;);
-          line.className = &quot;line&quot;;
-          line.style.fontSize = fontSize;
-          line.style.color = color;
-          container.appendChild(line);
-
-          let i = 0;
-          const interval = setInterval(() =&gt; {
-              if (i &lt; text.length) {
-                  const char = text.charAt(i);
-
-                  // 이미지 삽입 형식: [이미지URL]
-                  if (char === &quot;[&quot;) {
-                      const endIndex = text.indexOf(&quot;]&quot;, i);
-                      if (endIndex &gt; i) {
-                          const imageUrl = text.substring(i + 1, endIndex);
-
-                          // 이미지 생성 및 삽입
-                          const img = document.createElement(&quot;img&quot;);
-                          img.src = imageUrl;
-                          img.className = &quot;image&quot;;
-                          container.appendChild(img);
-
-                          i = endIndex + 1;
-                          return; // 다음 타이핑으로 넘어감
-                      }
-                  }
-
-                  // 텍스트 출력
-                  const span = document.createElement(&quot;span&quot;);
-                  span.textContent = char;
-
-                  // 애니메이션 효과 적용
-                  if (char === &quot; &quot;) {
-                      span.className = &quot;space&quot;;
-                      span.innerHTML = &quot;&amp;nbsp;&quot;;
-                  } else {
-                      if (waveEffect &amp;&amp; shakeEffect) {
-                          span.className = &quot;wave-shake&quot;; // 두 효과를 동시에 적용
-                      } else if (waveEffect) {
-                          span.className = &quot;wave&quot;; // 물결 효과만 적용
-                      } else if (shakeEffect) {
-                          span.className = &quot;shake&quot;; // 떨림 효과만 적용
-                      }
-                  }
-
-                  line.appendChild(span);
-                  i++;
-              } else {
-                  clearInterval(interval); // 타이핑 완료
-                  resolve(); // 작업 완료 신호
-              }
-          }, speed);
-      });
+  // 고유한 랜덤 ID 생성 함수
+  function generateRandomId(prefix = &quot;typewriter-container&quot;) {
+      return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
   }
+
+  function typeWriter(
+    text,
+    containerId,
+    speed,
+    fontSize = &quot;25px&quot;,
+    color = &quot;#fff&quot;,
+    waveEffect = false,
+    shakeEffect = false
+) {
+    return new Promise((resolve) =&gt; {
+        const container = document.getElementById(containerId);
+
+        const line = document.createElement(&quot;div&quot;);
+        line.className = &quot;line&quot;;
+        line.style.fontSize = fontSize;
+        line.style.color = color;
+        container.appendChild(line);
+
+        let i = 0;
+        const interval = setInterval(() =&gt; {
+            if (i &lt; text.length) {
+                const char = text.charAt(i);
+
+                const span = document.createElement(&quot;span&quot;);
+
+                if (char === &quot; &quot;) {
+                    // 공백 처리
+                    span.innerHTML = &quot;&amp;nbsp;&quot;;
+                } else {
+                    // 일반 문자 처리
+                    span.textContent = char;
+                }
+
+                // 애니메이션 효과 적용
+                if (waveEffect &amp;&amp; shakeEffect) {
+                    span.classList.add(&quot;wave-shake&quot;);
+                } else if (waveEffect) {
+                    span.classList.add(&quot;wave&quot;);
+                } else if (shakeEffect) {
+                    span.classList.add(&quot;shake&quot;);
+                }
+
+                line.appendChild(span);
+                i++;
+            } else {
+                clearInterval(interval); // 타이핑 완료
+                resolve(); // 작업 완료 신호
+            }
+        }, speed);
+    });
+}
 
   // 여러 텍스트를 순차적으로 출력
   async function runTypingEffect() {
-      const containerId = &quot;typewriter-container&quot;;
+      const containerParentId = &quot;typewriter-containers&quot;;
+      const containerId = generateRandomId(); // 고유 ID 생성
+      
+      // 새 컨테이너를 추가
+      const containerParent = document.getElementById(containerParentId);
+      const newContainer = document.createElement(&quot;div&quot;);
+
+      // 생성된 컨테이너에 ID와 필요한 스타일 추가
+      newContainer.id = containerId;
+      newContainer.classList.add(&quot;line&quot;); // 스타일 유지
+      containerParent.appendChild(newContainer);
 
       await typeWriter(&quot;피아노, 요리, 그림… 도구와 재료를 한가득 사 와 함께 해보자며 설득하던 부모님.\n\n&quot;, containerId, 50);
       
@@ -447,7 +460,6 @@
           &quot;28px&quot;,
           &quot;#0f0&quot;
       );
-
   }
 
   // 타이핑 효과 실행

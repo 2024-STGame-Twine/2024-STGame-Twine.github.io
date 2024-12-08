@@ -9,7 +9,8 @@
 </head>
 <body>
 <tw-story><noscript><tw-noscript>JavaScript needs to be enabled to play 꿈 속.</tw-noscript></noscript></tw-story>
-<tw-storydata name="꿈 속" startnode="1" creator="Twine" creator-version="2.9.2" format="Harlowe" format-version="3.3.9" ifid="8EDCBB36-CF92-443F-8569-DE4DB044F395" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="제목 없는 구절" tags="" position="700,325" size="100,100">&lt;div id=&quot;typewriter-container&quot;&gt;&lt;/div&gt;
+<tw-storydata name="꿈 속" startnode="1" creator="Twine" creator-version="2.9.2" format="Harlowe" format-version="3.3.9" ifid="8EDCBB36-CF92-443F-8569-DE4DB044F395" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="제목 없는 구절" tags="" position="700,325" size="100,100">&lt;div id=&quot;typewriter-containers&quot;&gt;&lt;/div&gt;
 &lt;div id=&quot;choice&quot; style=&quot;display: none; margin-top: 20px;&quot;&gt;[[신인상 트로피를 쥔다. -&gt;트로피]]&lt;/div&gt;
 
 &lt;style&gt;
@@ -70,86 +71,100 @@
 &lt;/style&gt;
 
 &lt;script&gt;
-  // 타이핑 효과 함수
-  function typeWriter(
-      text,
-      containerId,
-      speed,
-      fontSize = &quot;25px&quot;,
-      color = &quot;#fff&quot;,
-      waveEffect = false,
-      shakeEffect = false
-  ) {
-      return new Promise((resolve) =&gt; {
-          const container = document.getElementById(containerId);
-
-          const line = document.createElement(&quot;div&quot;);
-          line.className = &quot;line&quot;;
-          line.style.fontSize = fontSize;
-          line.style.color = color;
-          container.appendChild(line);
-
-          let i = 0;
-          const interval = setInterval(() =&gt; {
-              if (i &lt; text.length) {
-                  const char = text.charAt(i);
-
-                  // 이미지 삽입 형식: [이미지URL]
-                  if (char === &quot;[&quot;) {
-                      const endIndex = text.indexOf(&quot;]&quot;, i);
-                      if (endIndex &gt; i) {
-                          const imageUrl = text.substring(i + 1, endIndex);
-
-                          // 이미지 생성 및 삽입
-                          const img = document.createElement(&quot;img&quot;);
-                          img.src = imageUrl;
-                          img.className = &quot;image&quot;;
-                          container.appendChild(img);
-
-                          i = endIndex + 1;
-                          return; // 다음 타이핑으로 넘어감
-                      }
-                  }
-
-                  // 텍스트 출력
-                  const span = document.createElement(&quot;span&quot;);
-                  span.textContent = char;
-
-                  // 애니메이션 효과 적용
-                  if (char === &quot; &quot;) {
-                      span.className = &quot;space&quot;;
-                      span.innerHTML = &quot;&amp;nbsp;&quot;;
-                  } else {
-                      if (waveEffect &amp;&amp; shakeEffect) {
-                          span.className = &quot;wave-shake&quot;; // 두 효과를 동시에 적용
-                      } else if (waveEffect) {
-                          span.className = &quot;wave&quot;; // 물결 효과만 적용
-                      } else if (shakeEffect) {
-                          span.className = &quot;shake&quot;; // 떨림 효과만 적용
-                      }
-                  }
-
-                  line.appendChild(span);
-                  i++;
-              } else {
-                  clearInterval(interval); // 타이핑 완료
-                  resolve(); // 작업 완료 신호
-              }
-          }, speed);
-      });
+  function generateRandomId(prefix = &quot;typewriter-container&quot;) {
+      return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
   }
+
+  function typeWriter(
+    text,
+    containerId,
+    speed,
+    fontSize = &quot;25px&quot;,
+    color = &quot;#fff&quot;,
+    waveEffect = false,
+    shakeEffect = false
+  ) {
+    return new Promise((resolve) =&gt; {
+        const container = document.getElementById(containerId);
+
+        const line = document.createElement(&quot;div&quot;);
+        line.className = &quot;line&quot;;
+        line.style.fontSize = fontSize;
+        line.style.color = color;
+        container.appendChild(line);
+
+        let i = 0;
+        const interval = setInterval(() =&gt; {
+            if (i &lt; text.length) {
+                const char = text.charAt(i);
+
+                const span = document.createElement(&quot;span&quot;);
+
+                // 이미지 삽입 처리: [이미지URL]
+                if (char === &quot;[&quot;) {
+                    const endIndex = text.indexOf(&quot;]&quot;, i);
+                    if (endIndex &gt; i) {
+                        const imageUrl = text.substring(i + 1, endIndex);
+
+                        // 이미지 생성 및 삽입
+                        const img = document.createElement(&quot;img&quot;);
+                        img.src = imageUrl;
+                        img.className = &quot;image&quot;;
+                        line.appendChild(img);
+
+                        i = endIndex + 1;
+                        return; // 이미지가 삽입되면 다음 타이핑으로 넘어감
+                    }
+                }
+
+                // 공백 처리
+                if (char === &quot; &quot;) {
+                    span.innerHTML = &quot;&amp;nbsp;&quot;;
+                } else {
+                    // 일반 문자 처리
+                    span.textContent = char;
+                }
+
+                // 애니메이션 효과 적용
+                if (waveEffect &amp;&amp; shakeEffect) {
+                    span.classList.add(&quot;wave-shake&quot;);
+                } else if (waveEffect) {
+                    span.classList.add(&quot;wave&quot;);
+                } else if (shakeEffect) {
+                    span.classList.add(&quot;shake&quot;);
+                }
+
+                line.appendChild(span);
+                i++;
+            } else {
+                clearInterval(interval); // 타이핑 완료
+                resolve(); // 작업 완료 신호
+            }
+        }, speed);
+    });
+}
 
   // 여러 텍스트를 순차적으로 출력
   async function runTypingEffect() {
-      const containerId = &quot;typewriter-container&quot;;
+      const containerParentId = &quot;typewriter-containers&quot;;
+      const containerId = generateRandomId(); // 고유 ID 생성
+      
+      // 새 컨테이너를 추가
+      const containerParent = document.getElementById(containerParentId);
+      const newContainer = document.createElement(&quot;div&quot;);
 
-      await typeWriter(&quot;함성과 내 이름을 외치는 소리가 울려퍼진다.\n\n&quot;, containerId, 50, &quot;25px&quot;, &quot;#ffffff&quot;);
+      // 생성된 컨테이너에 ID와 필요한 스타일 추가
+      newContainer.id = containerId;
+      newContainer.classList.add(&quot;line&quot;); // 스타일 유지
+      containerParent.appendChild(newContainer);
+
+            await typeWriter(&quot;함성과 내 이름을 외치는 소리가 울려퍼진다.\n\n&quot;, containerId, 50, &quot;25px&quot;, &quot;#ffffff&quot;);
 
       await typeWriter(&#39;&quot;아크! 아크!&quot;\n\n&#39;, containerId, 50, &quot;30px&quot;, &quot;#ffff00&quot;, true);
 
       await typeWriter(&quot;\n그토록 받고 싶었던 신인상 트로피가 단상 위에 올려져있다. \n\n&quot;, containerId, 50, &quot;25px&quot;, &quot;#ffffff&quot;);
 
-await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐한다.\n\n&quot;, containerId, 50, &quot;25px&quot;, &quot;#ffffff&quot;);
+      await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐한다.\n\n&quot;, containerId, 50, &quot;25px&quot;, &quot;#ffffff&quot;);
 
       await typeWriter(&quot;.&quot;, containerId, 200, &quot;25px&quot;, &quot;#ffffff&quot;);
       await typeWriter(&quot;.&quot;, containerId, 200, &quot;25px&quot;, &quot;#fff&quot;);
@@ -164,14 +179,15 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
           &quot;25px&quot;,
           &quot;#C70039&quot;
       );
-
-      // 대사가 모두 출력된 후 선택지를 표시
-      document.getElementById(&quot;choice&quot;).style.display = &quot;block&quot;;
+      
+	document.getElementById(&quot;choice&quot;).style.display = &quot;block&quot;;
   }
 
   // 타이핑 효과 실행
   runTypingEffect();
-&lt;/script&gt;</tw-passagedata><tw-passagedata pid="2" name="트로피" tags="" position="700,450" size="100,100">&lt;div id=&quot;typewriter-container&quot;&gt;&lt;/div&gt;
+&lt;/script&gt;
+
+</tw-passagedata><tw-passagedata pid="2" name="트로피" tags="" position="700,450" size="100,100">&lt;div id=&quot;typewriter-containers&quot;&gt;&lt;/div&gt;
 
 &lt;style&gt;
   .line {
@@ -231,79 +247,92 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
 &lt;/style&gt;
 
 &lt;script&gt;
-  // 타이핑 효과 함수
-  function typeWriter(
-      text,
-      containerId,
-      speed,
-      fontSize = &quot;25px&quot;,
-      color = &quot;#fff&quot;,
-      waveEffect = false,
-      shakeEffect = false
-  ) {
-      return new Promise((resolve) =&gt; {
-          const container = document.getElementById(containerId);
-
-          const line = document.createElement(&quot;div&quot;);
-          line.className = &quot;line&quot;;
-          line.style.fontSize = fontSize;
-          line.style.color = color;
-          container.appendChild(line);
-
-          let i = 0;
-          const interval = setInterval(() =&gt; {
-              if (i &lt; text.length) {
-                  const char = text.charAt(i);
-
-                  // 이미지 삽입 형식: [이미지URL]
-                  if (char === &quot;[&quot;) {
-                      const endIndex = text.indexOf(&quot;]&quot;, i);
-                      if (endIndex &gt; i) {
-                          const imageUrl = text.substring(i + 1, endIndex);
-
-                          // 이미지 생성 및 삽입
-                          const img = document.createElement(&quot;img&quot;);
-                          img.src = imageUrl;
-                          img.className = &quot;image&quot;;
-                          container.appendChild(img);
-
-                          i = endIndex + 1;
-                          return; // 다음 타이핑으로 넘어감
-                      }
-                  }
-
-                  // 텍스트 출력
-                  const span = document.createElement(&quot;span&quot;);
-                  span.textContent = char;
-
-                  // 애니메이션 효과 적용
-                  if (char === &quot; &quot;) {
-                      span.className = &quot;space&quot;;
-                      span.innerHTML = &quot;&amp;nbsp;&quot;;
-                  } else {
-                      if (waveEffect &amp;&amp; shakeEffect) {
-                          span.className = &quot;wave-shake&quot;; // 두 효과를 동시에 적용
-                      } else if (waveEffect) {
-                          span.className = &quot;wave&quot;; // 물결 효과만 적용
-                      } else if (shakeEffect) {
-                          span.className = &quot;shake&quot;; // 떨림 효과만 적용
-                      }
-                  }
-
-                  line.appendChild(span);
-                  i++;
-              } else {
-                  clearInterval(interval); // 타이핑 완료
-                  resolve(); // 작업 완료 신호
-              }
-          }, speed);
-      });
+  function generateRandomId(prefix = &quot;typewriter-container&quot;) {
+      return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
+  function typeWriter(
+    text,
+    containerId,
+    speed,
+    fontSize = &quot;25px&quot;,
+    color = &quot;#fff&quot;,
+    waveEffect = false,
+    shakeEffect = false
+  ) {
+    return new Promise((resolve) =&gt; {
+        const container = document.getElementById(containerId);
+
+        const line = document.createElement(&quot;div&quot;);
+        line.className = &quot;line&quot;;
+        line.style.fontSize = fontSize;
+        line.style.color = color;
+        container.appendChild(line);
+
+        let i = 0;
+        const interval = setInterval(() =&gt; {
+            if (i &lt; text.length) {
+                const char = text.charAt(i);
+
+                const span = document.createElement(&quot;span&quot;);
+
+                // 이미지 삽입 처리: [이미지URL]
+                if (char === &quot;[&quot;) {
+                    const endIndex = text.indexOf(&quot;]&quot;, i);
+                    if (endIndex &gt; i) {
+                        const imageUrl = text.substring(i + 1, endIndex);
+
+                        // 이미지 생성 및 삽입
+                        const img = document.createElement(&quot;img&quot;);
+                        img.src = imageUrl;
+                        img.className = &quot;image&quot;;
+                        line.appendChild(img);
+
+                        i = endIndex + 1;
+                        return; // 이미지가 삽입되면 다음 타이핑으로 넘어감
+                    }
+                }
+
+                // 공백 처리
+                if (char === &quot; &quot;) {
+                    span.innerHTML = &quot;&amp;nbsp;&quot;;
+                } else {
+                    // 일반 문자 처리
+                    span.textContent = char;
+                }
+
+                // 애니메이션 효과 적용
+                if (waveEffect &amp;&amp; shakeEffect) {
+                    span.classList.add(&quot;wave-shake&quot;);
+                } else if (waveEffect) {
+                    span.classList.add(&quot;wave&quot;);
+                } else if (shakeEffect) {
+                    span.classList.add(&quot;shake&quot;);
+                }
+
+                line.appendChild(span);
+                i++;
+            } else {
+                clearInterval(interval); // 타이핑 완료
+                resolve(); // 작업 완료 신호
+            }
+        }, speed);
+    });
+}
 
   // 여러 텍스트를 순차적으로 출력
   async function runTypingEffect() {
-      const containerId = &quot;typewriter-container&quot;;
+      const containerParentId = &quot;typewriter-containers&quot;;
+      const containerId = generateRandomId(); // 고유 ID 생성
+      
+      // 새 컨테이너를 추가
+      const containerParent = document.getElementById(containerParentId);
+      const newContainer = document.createElement(&quot;div&quot;);
+
+      // 생성된 컨테이너에 ID와 필요한 스타일 추가
+      newContainer.id = containerId;
+      newContainer.classList.add(&quot;line&quot;); // 스타일 유지
+      containerParent.appendChild(newContainer);
 
       await typeWriter(
           &quot;쥐려던 찰나 시야가 울렁거리더니 폭죽을 터뜨리던 무대장치 앞으로 점점 시야가 가까워진다.\n\n&quot;,
@@ -311,6 +340,7 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
           50
       );
 
+      // 두 번째 대화
       await typeWriter(
           &#39;&quot;쾅-&quot;&#39;,
           containerId,
@@ -320,7 +350,8 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
           false,
           true
       );
-      
+
+      // 세 번째 대화 (이미지 포함)
       await typeWriter(
           &quot;\n시야가 붉게 물든다...\n\n[https://github.com/user-attachments/assets/3d9a77f1-7a4a-4b56-8653-16f4bd2d6cc1]&quot;,
           containerId,
@@ -329,6 +360,7 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
           &quot;#C70039&quot;
       );
 
+      // 네 번째 대화
       await typeWriter(
           &quot;비명소리가 들린다.\n\n&quot;,
           containerId,
@@ -338,8 +370,10 @@ await typeWriter(&quot;팬들은 응원봉을 흔들며 자기 일처럼 기뻐�
       );
   }
 
+  // 타이핑 효과 실행
   runTypingEffect();
-&lt;/script&gt;</tw-passagedata></tw-storydata>
+&lt;/script&gt;
+</tw-passagedata></tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
