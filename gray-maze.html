@@ -12,7 +12,6 @@
 <tw-storydata name="gray-maze" startnode="1" creator="Twine" creator-version="2.9.2" format="Harlowe" format-version="3.3.9" ifid="C595EF29-F0F9-4105-915E-3DDF4B3948E1" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="제목 없는 구절" tags="" position="700,325" size="100,100">&lt;div id=&quot;typewriter-container&quot;&gt;&lt;/div&gt;
 &lt;div id=&quot;choice&quot; style=&quot;display: none; margin-top: 20px;&quot;&gt;[[이어폰을 낀다. -&gt;이어폰]]&lt;/div&gt;
 
-
 &lt;style&gt;
   .line {
       white-space: pre-line; /* 줄바꿈과 연속된 공백 처리 */
@@ -143,13 +142,13 @@
   // 여러 텍스트를 순차적으로 출력
   async function runTypingEffect() {
       const containerId = &quot;typewriter-container&quot;;
-
+      
       await typeWriter(
           &quot;사방이 어둡다. 커튼이란 커튼은 모조리 내려져있고, 방문 앞에도 가구며 책을 가득 쌓아놨다. 문 밖에서는 멤버들의 대화 소리가 들린다.\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;,
-          true
+          &quot;#fff&quot;
       );
   
   
@@ -157,7 +156,8 @@
           &quot;“여전하지, 퇴원하면서 파파라치한테 찍혀서 기사 났었잖아. 안티들이 그걸로 또 난리났더라.”\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#CCC&quot;
       );
   
   
@@ -165,30 +165,40 @@
           &quot;“제일 불쌍한 건 재혁인데, 안티들도 너무하네. 이제 활동도 어려울 아이돌한테…”\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#CCC&quot;
       );
   
   
   await typeWriter(
-          &quot;불쌍하게 여기는 척 하지마. 너희도 내가 이 그룹에서, 너희 사이에서 나가주길 바라고 있잖아.  걸림돌 취급하는 건 너희도 똑같아.\n\n&quot;,
+          &quot;불쌍하게 여기는 척 하지마.&quot;,
           containerId,
           50,
-          &quot;25px&quot;,
-          &quot;#ff0000&quot;
-      );
-
-  
-  await typeWriter(
-          &quot;…멤버들은 계속 대화를 이어가고 있다. 싸우기라도 하는 지 점점 목소리가 높아진다.\n\n&quot;,
-          containerId,
-          50,
-          &quot;25px&quot;,
+          &quot;28px&quot;,
+          &quot;#d00&quot;,
+          false,
           true
       );
+        await typeWriter(
+          &quot;\n너희도 내가 이 그룹에서, 너희 사이에서 나가주길 바라고 있잖아.  걸림돌 취급하는 건 너희도 똑같아.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;,
+          &quot;#d00&quot;,
+      );
+
   
+  await typeWriter(
+          &quot;\n…멤버들은 계속 대화를 이어가고 있다. 싸우기라도 하는 지 점점 목소리가 높아진다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;,
+          &quot;#fff&quot;
+      );
+
+      // 대사가 모두 출력된 후 선택지를 표시
       document.getElementById(&quot;choice&quot;).style.display = &quot;block&quot;;
   }
-
 
   // 타이핑 효과 실행
   runTypingEffect();
@@ -203,8 +213,8 @@
 
   .image {
       display: inline-block;
-      width: 300px; /* 이미지 기본 너비 */
-      height: 300px; /* 이미지 기본 높이 */
+      width: 1000px; /* 이미지 기본 너비 */
+      height: 500px; /* 이미지 기본 높이 */
       object-fit: contain; /* 비율 유지 */
       margin: 10px auto; /* 중앙 정렬 */
       border-radius: 10px; /* 모서리 둥글게 */
@@ -329,7 +339,7 @@
       const containerId = &quot;typewriter-container&quot;;
 
       await typeWriter(
-          &quot;틀고 있던 음악소리가 귀를 찌른다. 컴퓨터 화면으로 시선을 옮겼다.\n\n&quot;,
+          &quot;틀고 있던 음악소리가 귀를 찌른다. 컴퓨터 화면으로 시선을 옮겼다.\n\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
@@ -337,46 +347,65 @@
   
   
   await typeWriter(
-          &quot;&lt;복귀는 무슨 ㅋㅋ&gt;\n\n&quot;,
+          &quot;&lt;복귀는 무슨 ㅋㅋ&gt;\n\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;
+          &quot;28px&quot;,
+          &quot;#CCC&quot;
       );
   
   
   await typeWriter(
-          &quot;좋은 말이 없는 것을 알면서도 혹시나 하며 보고 있던 뉴스 댓글창이다.\n\n&quot;,
+          &quot;좋은 말이 없는 것을 알면서도 혹시나 하며 보고 있던 뉴스 댓글창이다.\n\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
   
     await typeWriter(
-          &quot;&lt;얼굴 다친 애로 동정표 사서 뜬 거 역겹다.&gt;\n\n&quot;,
+          &quot;&lt;얼굴 다친 애로 동정표 사서 뜬 거 역겹다;;&gt;\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;,
+          &quot;#CCC&quot;
+      );
+      
+        await typeWriter(
+          &quot;&lt;아크인지 뭔지 걔도 돈 받고 얼굴 이미 다 고쳤겠지 ㅋㅋ&gt;\n\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;,
+          &quot;#CCC&quot;
+      );
+      
+        await typeWriter(
+          &quot;귓가에 울리던 음악소리가 사라지고 천둥같은 타자소리가 내리꽂힌다.\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
       
-        await typeWriter(
-          &quot;&lt;아크인지 뭔지 걔도 돈 받고 얼굴 이미 다 고쳤겠지.&gt;\n\n&quot;,
+      await typeWriter(
+          &quot;괴로워하는 나를 보며 즐거워하는 그들의 웃음소리가 사이로 얼핏 들리는 것도 같다. \n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
       
-        await typeWriter(
-          &quot;귓가에 울리던 음악소리가 사라지고 천둥같은 타자소리가 내리꽂힌다. 괴로워하는 나를 보며 즐거워하는 그들의 웃음소리가 사이로 얼핏 들리는 것도 같다. 숨이 가빠진다.\n\n&quot;,
+      await typeWriter(
+          &quot;숨이 가빠진다.\n\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;fff&quot;
       );
       
         await typeWriter(
           &quot;&lt;다른 애들에 비해서 그렇게 잘 생긴 것도 아니더만&gt;\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#CCC&quot;
       );
 
 
@@ -385,77 +414,107 @@
           &quot;&lt;응 여론전 아이돌 안빨아~ 아크 외국 시장 노리는 멤인거 다 티남 ㅋㅋ&gt;\n\n&quot;,
           containerId,
           40,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#CCC&quot;
       );
       
        await typeWriter(
-          &quot;!$&amp;)#@$(@#$*(@#(@#$*)@#$)@#($)#@$)@#($)(#@)$(@)##)@$(\n\n&quot;,
+          &quot;!$&amp;)#@$(@#$*(@#(@#$*)@#$)@재혁#$@$)@#($)(#@)$(@)##)@$(\n\n&quot;,
           containerId,
           30,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#AAA&quot;
       );
       
        await typeWriter(
           &quot;!&amp;$)#@*$)#@*$@(#$*(@#*$(@#$!*$#@()@$*)#$$)*#@)*$(@#\n\n&quot;,
           containerId,
           20,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#999&quot;
       );
       
        await typeWriter(
-          &quot;#@*$)@#*$)#@$()!(#)*$(#@*$(@#$)!*$)!#(!#(#$)(#!$)(!)$*#@)$\n\n&quot;,
+          &quot;#@*$)@#*$)#@$()!(#)아크@*$(@#$)!*$)!#(!#(#$)(#!$)(!)$*#@)$\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#888&quot;
       );
       
       await typeWriter(
-          &quot;#$&amp;@%($#%*($&amp;@*#$@#*$&amp;*@%@*#@$&amp;@#$&amp;@*#@$\n\n&quot;,
+          &quot;#$&amp;@%($#%*($&amp;@*#$@#*$&amp;혐오*#@@##$&amp;@@#*#@$\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#777&quot;
       );
       
       await typeWriter(
-          &quot;#*@$&amp;@#&amp;$*@^#$*!&amp;#$*!#&amp;$*#@&amp;$*@#^%@*!#*$\n\n&quot;,
+          &quot;#*@$&amp;@#&amp;$*@^#$**!#&amp;$*#@&amp;$*@#^%재혁@*!#*$\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#666&quot;
       );
       
       await typeWriter(
-          &quot;!$#@*$&amp;#@$@*#$#*&amp;@!$*#$*@#$&amp;@#*$!(&amp;&amp;\n\n&quot;,
+          &quot;!아크$&amp;#@$@*#$#*&amp;@!$*#$*@#얼굴#*$!(&amp;&amp;\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#555&quot;
       );
       
       await typeWriter(
-          &quot;@$^*$@&amp;@$&amp;!#*$&amp;#@*$&amp;@#*%&amp;@*#\n\n&quot;,
+          &quot;@$^*$@&amp;@$&amp;!#*못생$&amp;@#*%&amp;@*#\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#444&quot;
       );
       
       await typeWriter(
-          &quot;#@*$&amp;@#$&amp;*@&amp;$!*$#&amp;*#@*$\n\n&quot;,
+          &quot;#@*$&amp;@#$&amp;*@&amp;$!*우웩#@*$\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#333&quot;
       );
       
       await typeWriter(
-          &quot;$#&amp;#@*$&amp;@#$#\n\n&quot;,
+          &quot;$#&amp;#@*$&amp;@#$#\n\n\n&quot;,
           containerId,
           10,
-          &quot;25px&quot;
+          &quot;25px&quot;,
+          &quot;#222&quot;
       );
         await typeWriter(
-          &quot;왜 이런 걸 보고 있었던 걸까, 무엇을 바라고. 좋은 말이 없을 것을 알면서도 뭐에 중독되기라도 한 것처럼 나는 계속해서 내 이름이 들어간 기사를 열어보고 있었다. 댓글란의 미리보기는 악플로 빼곡히 차있다. 타자소리는 계속된다.  손이 떨린다.\n\n&quot;,
+          &quot;왜 이런 걸 보고 있었던 걸까, 무엇을 바라고..\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;,
-          true
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;좋은 말이 없을 것을 알면서도 뭐에 중독되기라도 한 것처럼 나는 계속해서 내 이름이 들어간 기사를 열어보고 있었다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;댓글란의 미리보기는 악플로 빼곡히 차있다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;타자소리는 계속된다.  손이 떨린다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
       );
       
       await typeWriter(
@@ -463,9 +522,21 @@
           containerId,
           50,
           &quot;25px&quot;,
+          &quot;fff&quot;,
+          false,
           true
       );
-  
+      
+      await typeWriter(
+          &quot;[https://github.com/user-attachments/assets/0e717490-026b-4320-82c8-1148700789d8]&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;,
+          &quot;fff&quot;,
+          false,
+          true
+      );
+ 
       document.getElementById(&quot;choice&quot;).style.display = &quot;block&quot;;
   }
 
@@ -610,33 +681,33 @@
           &quot;&lt;아크야.. 건강만 해라 누나 아니 이모들 걱정한다 ㅠㅠ&gt;\n\n&quot;,
           containerId,
           50,
-          &quot;25px&quot;,
+          &quot;28px&quot;,
           &quot;#ff0&quot;
       );
 
       await typeWriter(
-          &quot;…그 하나의 댓글을 시작으로, 보이지 않았던 것들이 보이기 시작한다.&quot;,
+          &quot;…그 하나의 댓글을 시작으로, 보이지 않았던 것들이 보이기 시작한다.\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
       
       await typeWriter(
-          &quot;싸우지 못하고 숨어버린 자신을 대신해서 싸우는 사람들, 제 욕을 들은 것처럼 화 내는 사람들,&quot;,
+          &quot;숨어버린 자신을 응원하는 사람들, 오랜 시간 나를 사랑해주는 사람들,&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
 
       await typeWriter(
-          &quot;자신을 향해 계속해서…\n\n&quot;,
+          &quot;자신을 향해 계속해서…\n\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
       
        await typeWriter(
-          &quot;&lt;아크 이재혁 내새끼 사랑해&gt;\n\n&quot;,
+          &quot;&lt;아크 이재혁, 내 새끼 사랑해&gt;\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;,
@@ -644,7 +715,7 @@
       );
       
        await typeWriter(
-          &quot;&lt;아크 사랑해 난 니가 오페라의 유령마냥 가면끼고 복면가왕에 나타나고 여전히 덕질할거다&gt;\n\n&quot;,
+          &quot;&lt;아크 복귀 기원 3년차... 난 너가 오페라의 유령 가면끼고 복면가왕에 나타나도 여전히 덕질할거다&gt;\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;,
@@ -652,7 +723,7 @@
       );
       
        await typeWriter(
-          &quot;&lt;아크 노래로 까는 애들 구름 위 듣기 금지하는 법 좀&gt;\n\n&quot;,
+          &quot;&lt;아크 노래 &#39;구름 위&#39; 지금도 듣는 사람 손&gt;\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;,
@@ -660,7 +731,7 @@
       );
       
       await typeWriter(
-          &quot;&lt;아크가 얼굴로만 떴다니 무슨 말임 나인틴 듣보일 때 온갖 예능 나와서 홍보한 게 누군데 타팬들 나인티즈 코스프레 좀 작작해라&gt;\n\n&quot;,
+          &quot;&lt;나는 재혁이 사랑한다! 비주얼 말고도 예능, 노래, 피지컬 다 되잖아!&gt;\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;,
@@ -668,22 +739,58 @@
       );
       
       await typeWriter(
-          &quot;&lt;네가 뭘 해도 이모들은 널 응원해&gt;\n\n&quot;,
+          &quot;&lt;네가 뭘 해도 이모들은 널 응원해&gt;&quot;,
           containerId,
           50,
           &quot;25px&quot;,
           &quot;#ff0&quot;
       );
       
+      await typeWriter(
+          &quot;ㄴ&lt;어이, 삼촌들도 끼워줘&gt;\n\n\n&quot;,
+          containerId,
+          50,
+          &quot;20px&quot;,
+          &quot;#ff5&quot;
+      );
+      
        await typeWriter(
-          &quot;알고 있었을 지도 모른다. 이런 사람들이 있다는 걸. 나를 겨누는 칼에만 눈을 빼앗겨 나를 지키려는 사람들을 의식 저 편으로 넘긴 채 스스로를 아프게 했다. 얼굴을 다친 나는, ‘아크’가 될 수 없다고, ‘아크’가 아니라면 사랑받을 수 없다고.\n\n&quot;,
+          &quot;알고 있었을 지도 모른다. 이런 고마운 사람들이 있다는 걸.\n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
       );
       
       await typeWriter(
-          &quot;달리기라도 한 듯이 턱 끝까지 숨이 차올랐다. 말과 생각이 엉망으로 엉켜 소리가 되지 못하고 혀 끝에만 맴돈다. 사람들이 전한 온기가 몸 속에서 뜨겁게 끓어오르는 지 눈가가, 또 심장이 따뜻해진다. \n\n&quot;,
+          &quot;나를 겨누는 칼에만 눈을 빼앗겨 나를 지키려는 사람들을 의식 저 편으로 넘긴 채 스스로를 아프게 했다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;얼굴을 다친 나는, ‘아크’가 될 수 없다고, ‘아크’가 아니라면 사랑받을 수 없다고.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;달리기라도 한 듯이 턱 끝까지 숨이 차올랐다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;말과 생각이 엉망으로 엉켜 소리가 되지 못하고 혀 끝에만 맴돈다.\n\n&quot;,
+          containerId,
+          50,
+          &quot;25px&quot;
+      );
+      
+      await typeWriter(
+          &quot;사람들이 전한 온기가 몸 속에서 뜨겁게 끓어오르는 지 눈가가, 또 심장이 따뜻해진다. \n\n&quot;,
           containerId,
           50,
           &quot;25px&quot;
@@ -701,6 +808,7 @@
           containerId,
           50,
           &quot;25px&quot;,
+          &quot;#0f0&quot;,
           true
       );
   }
